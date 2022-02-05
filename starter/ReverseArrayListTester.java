@@ -13,10 +13,11 @@ import org.junit.*;
  */
 public class ReverseArrayListTester {
 
-    private MyArrayList numsArrayList, stringsArrayList;
+    private MyArrayList numsArrayList, stringsArrayList, emptArrayList;
 
     Integer[] nums = {1, 2, 3, 4, 5, 6, 7};
     String[] strings = {"upside", "fliping", "backwards", "reverse"};
+    Object[] empty = {};
 
     /**
      * Run before every test
@@ -25,6 +26,7 @@ public class ReverseArrayListTester {
     public void setUp(){
         numsArrayList = new MyArrayList<>(nums);
         stringsArrayList = new MyArrayList<>(strings);
+        emptArrayList = new MyArrayList<>(empty);
     }
 
 
@@ -43,13 +45,38 @@ public class ReverseArrayListTester {
     }
 
     /**
+     * Tests reverseRegion method when called on empty Arraylist with bounds
+     * eqaul
+     */
+    @Test
+    public void testReverseEmptyArrayList(){
+        emptArrayList.reverseRegion(0, 0);
+        for(int i = 0; i < emptArrayList.size(); i++){
+            assertEquals(i+1, emptArrayList.get(i));
+        }
+    }
+    
+    /**
+     * Tests reverseRegion method when called on empty Arraylist with wrong
+     * bounds
+     */
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testReverseEmptyArrayListWrongBounds(){
+		try{
+            emptArrayList.reverseRegion(0, 1);
+        }catch(IndexOutOfBoundsException e){
+			throw e;
+		}
+		fail("Exception not catched");    
+    }
+
+    /**
      * Tests reverseRegion method when
      * fromIndex > toIndex
      */
     @Test
     public void testReverseFromIndexGreater(){
         numsArrayList.reverseRegion(4, 3);
-        assertEquals(numsArrayList, numsArrayList);
         for(int i = 0; i < numsArrayList.size(); i++){
             assertEquals(i+1, numsArrayList.get(i));
         }
@@ -87,7 +114,13 @@ public class ReverseArrayListTester {
         assertEquals(3, numsArrayList.get(4));
         assertEquals(2, numsArrayList.get(5));
         assertEquals(1, numsArrayList.get(6));
-    } //    String[] strings = {"upside", "fliping", "backwards", "reverse"};
+        //calling it on strings
+        stringsArrayList.reverseRegion(1, 3);
+        assertEquals("upside", stringsArrayList.get(0));
+        assertEquals("reverse", stringsArrayList.get(1));
+        assertEquals("backwards", stringsArrayList.get(2));
+        assertEquals("fliping", stringsArrayList.get(3));
+    }
 
     /**
      * Custom test
